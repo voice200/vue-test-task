@@ -1,0 +1,12 @@
+.b-profile{
+  &_info{
+    display: flex;
+  }
+  &_personal-label{
+    font-size: 23px;
+    font-weight: bold;
+    border-bottom: rgba(213, 241, 232, .7) 3px solid;
+    margin-bottom: 25px;
+  }
+
+}

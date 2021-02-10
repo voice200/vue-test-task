@@ -1,28 +1,56 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div>
+    <header-app></header-app>
+    <div class="container-fluid">
+       <router-view></router-view>
+    </div>
+    <v-snackbar
+        :value="true"
+        color = "black"
+        :multi-line="true"
+        class="snackbar"
+        v-if="error"
+        :timeout="5000"
+    >
+      {{ error }}
+      <template v-slot:action="{ attrs }">
+        <v-btn
+            color="red"
+            text
+            v-bind="attrs"
+            @click="closeError"
+            @input="closeError"
+        >
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import HeaderApp from '@/components/header-app/';
 
 export default {
   name: 'App',
-  components: {
-    HelloWorld
-  }
-}
-</script>
 
+  components: {
+    HeaderApp
+  },
+  computed:{
+    error() {
+      return this.$store.getters.error
+    },
+  },
+  methods: {
+    closeError() {
+      this.$store.dispatch('clearError')
+    },
+  }
+};
+</script>
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+.snackbar{
+  opacity: 0.7;
 }
 </style>

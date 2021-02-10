@@ -1,0 +1,19 @@
+.nav-bar {
+  background: #d5f1e8 !important;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+  &__decoration {
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+  }
+  &_links {
+    display: flex;
+    justify-content: flex-end;
+    &__position {
+
+    }
+  }
+  &_logo{
+    font-weight: bold;
+  }
+}
+

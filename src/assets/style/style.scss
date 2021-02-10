@@ -1,0 +1,16 @@
+@import "variables";
+@import "bem/nav-bar";
+@import "bem/form";
+@import "bem/title";
+@import "bem/profile";
+@import "bem/avatar";
+@import "bem/additional-information";
+body{
+  margin: 0 auto;
+  font-family: $fontFamily;
+}
+form{
+  display: flex;
+  flex-direction: column;
+}
+
