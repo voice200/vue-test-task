@@ -24,15 +24,10 @@ name: "myProfile",
   data() {
     return{
       title: 'My Profile',
-      user: {
-        id: 1,
-        name: 'Irina Malysheva',
-        phone: '7999844444',
-        email: 'test@gmail.com'
-      }
     }
   },
   created() {
+
   },
   computed: {
     getUserById () {

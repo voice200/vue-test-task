@@ -11,7 +11,6 @@ import vuetify from './plugins/vuetify';
 
 Vue.use(VueRouter)
 Vue.use(Vuelidate)
-Vue.use(vuetify)
 
 Vue.config.productionTip = false
 Vue.use(Vuelidate)
@@ -32,6 +31,7 @@ new Vue({
     });
 
     firebase.auth().onAuthStateChanged(user => {
+      console.log('user11111', user)
       if (user) {
         this.$store.dispatch('autoLogUser', user)
       }

@@ -21,10 +21,12 @@
 </template>
 
 <script>
+
 export default {
   name: 'header-app',
   data() {
    return  {
+     userId: ''
    }
   },
   methods: {
@@ -34,16 +36,19 @@ export default {
             this.$router.push('/login')
 
           })
-    }
+    },
   },
   computed: {
     isUserLoggedIn () {
       return this.$store.getters.isUserLoggedIn
     },
+    user() {
+      return this.$store.getters.user
+    },
     links () {
       if ( this.isUserLoggedIn ) {
         return [
-          {title: 'My profile', url: '/myProfile', icon: 'fa fa-user'}
+          {title: 'My profile', url: `/myProfile/${this.user.id}`, icon: 'fa fa-user'}
         ]
       } else {
         return [
@@ -51,7 +56,9 @@ export default {
           {title: 'Registration', url: '/registration', icon: 'fa fa-lock'}
         ]
       }
-    }
+    },
+  },
+  created() {
   }
 }
 </script>

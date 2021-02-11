@@ -12,18 +12,18 @@
                  v-model="formState[item.name]"
                  @blur="$v.formState[item.name].$touch()"
                  :placeholder="item.placeholder">
-          {{ $v.formState[item.name]}}
+
           <div class="invalid-feedback" v-if="!$v.formState[item.name].required">
             This field is required
           </div>
           <div class="invalid-feedback" v-if="!$v.formState[item.name].email && item.name === 'email'">
             This field should be an Email
           </div>
-<!--          <div class="invalid-feedback" v-if="item.name === 'password' && !$v.formState[item.name].between">-->
-<!--            Length of password should be between {{$v.formState[item.name].$params.between.min}}-->
-<!--            and {{$v.formState[item.name].$params.between.max}},-->
-<!--            now Length is {{ formState[item.name].length }}-->
-<!--          </div>-->
+          <div class="invalid-feedback" v-if="item.name === 'password' && !$v.formState[item.name].between">
+            Length of password should be between {{$v.formState[item.name].$params.between.min}}
+            and {{$v.formState[item.name].$params.between.max}},
+            now Length is {{ formState[item.name].length }}
+          </div>
           <div class="invalid-feedback" v-if="!$v.formState[item.name].sameAs && item.name === 'confirmPassword'">
             Passwords do not match
           </div>
@@ -49,7 +49,6 @@
 </template>
 
 <script>
-//<!--            :disabled="$v.$invalid || loading"-->
 import { returnValidationForm } from '@/fixtures'
 import {validationForm} from '@/fixtures'
 import fb from 'firebase/app'
@@ -121,7 +120,6 @@ export default {
     });
     this.formState = { ...this.formState, ...newData };
     state.validator = returnValidationForm(this.type);
-    console.log('validator1234', state.validator)
 
   },
   validations: {

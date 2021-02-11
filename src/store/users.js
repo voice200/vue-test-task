@@ -17,7 +17,8 @@ class Users {
 		password,
 		email,
 		imageSrc = '',
-		id=null
+		id=null,
+		key= null
 	) {
 		this.name = name
 		this.phone = phone
@@ -25,6 +26,7 @@ class Users {
 		this.email = email,
 		this.imageSrc = imageSrc
 		this.id = id
+		this.key= key
 	}
 }
 
@@ -41,10 +43,12 @@ export default {
 			state.users.push(payload)
 		},
 		loadUsers (state, payload) {
-			state.users = payload
+			state.users = [ ...payload ]
 		},
-		updateAd (state, payload) {
+		updateUser (state, payload) {
+			console.log('jfjfdddd')
 			const newUsers = state.users.map(user => {
+				console.log('ghdgdg',payload, user)
 				if ( payload.id === user.id ) {
 					user = {...payload}
 				}
@@ -102,10 +106,10 @@ export default {
 					'',
 					payload.id)
 
+
 				const user = await fb.database().ref('users').push(newUser);
-				console.log('user create', user.key, `users/${user.key}`)
-				const userKey = { ...user, key: user.key }
-				await fb.database().ref(`users/${user.key}`).update(userKey)
+				const userKey = { ...newUser, key: user.key }
+				await fb.database().ref(`/users/${user.key}`).update(userKey)
 
 				commit('createUser', userKey)
 				commit('setLoading', false)
@@ -123,18 +127,13 @@ export default {
 			try {
 				const image = payload
 				const imageExt = image.name. slice(image.name.lastIndexOf('.'))
-				const user = this.getters.getUserById(fb.auth().currentUser.uid)
-				const path = `${user.uid}${imageExt}`
+				const user = this.state.users.users.find(user => user.id === this.state.users.user.id )
+				console.log('this.state.users.', user)
+				const path = `${Date.now().toString()}.${user.id}${imageExt}`
+				console.log('path', path)
 				const storageRef = fb.storage().ref('users')
-				const img = await storageRef.child(path)
-
-				if ( img ) {
-					await storageRef.child(path).delete()
-				}
-
 				await storageRef.child(path).put(image)
 				const imageSrc = await storageRef.child(path).getDownloadURL()
-				console.log('this.store.user', user.uid, imageExt)
 				const newUser= {...user, imageSrc: imageSrc}
 
 				await fb.database().ref(`users/${newUser.key}`).update(newUser)
@@ -158,7 +157,7 @@ export default {
 				Object.keys(users).forEach(key =>{
 					const user = users[key]
 					resultUsers.push(
-						new Users(user.name, user.phone, user.password, user.email, user.imageSrc, user.id)
+						new Users(user.name, user.phone, user.password, user.email, user.imageSrc, user.id, user.key)
 					)
 				})
 				commit('loadUsers', resultUsers)

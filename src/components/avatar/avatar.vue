@@ -1,13 +1,13 @@
 <template>
 <div>
   <div class="b-avatar b-avatar__position">
-    <img class="b-avatar_img" :src="imageSrc" alt="avatar" v-if="photo">
+    <img class="b-avatar_img" :src=" photo" alt="avatar" v-if="photo">
     <img class="b-avatar_img" src="https://pp.userapi.com/c836137/v836137627/3accd/sVFKKoqN2v4.jpg" alt="avatar" v-if="!photo">
   </div>
   <p class="field-download">
     <button type="button" class="btn btn-outline-info button-photo" @click="clickInputImg">Выбрать
       <input ref="downloadImg" class="photo-input" type="file" name="photo" accept="image/*" @change="updatePhoto" ></button>
-    <button :disabled="!loading || !imageSrc" type="button" class="btn btn-outline-warning">Отправить</button></p>
+    <button :disabled="loading || disable" type="button" class="btn btn-outline-warning" @click="changePhoto">Отправить</button></p>
 </div>
 </template>
 
@@ -18,7 +18,9 @@ export default {
   data () {
    return {
      photo: this.src,
-     imageSrc:''
+     imageSrc:'',
+     disable: true,
+     img: ''
    }
   },
   computed: {
@@ -28,23 +30,28 @@ export default {
   },
   methods: {
    updatePhoto () {
-     this.photo = this.$refs.downloadImg.files[0];
-     console.log('this.photo', this.photo)
-     console.log('this.$refs.downloadImg.files[0]',this.$refs.downloadImg.files[0])
-     if (!this.photo){
+     this.img = this.$refs.downloadImg.files[0];
+     if (!this.img){
        this.imageSrc = ''
      } else {
        const reader = new FileReader()
-       reader.readAsDataURL(this.photo)
+       reader.readAsDataURL(this.img)
        reader.onload = () =>{
          this.imageSrc = reader.result
+         this.photo = reader.result
        }
+       this.disable = false
      }
-     this.$store.dispatch('updatePhoto', this.photo)
    },
    clickInputImg() {
       this.$refs.downloadImg.click()
-   }
+   },
+    changePhoto() {
+      this.$store.dispatch('updatePhoto', this.img)
+          .then(()=>{
+            this.disable = true
+          })
+    }
   }
 }
 </script>
