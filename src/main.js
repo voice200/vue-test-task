@@ -32,11 +32,7 @@ new Vue({
 
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
-        console.log('user',user)
         this.$store.dispatch('autoLogUser', user)
-      }
-      else {
-        console.log('no data')
       }
     });
 
