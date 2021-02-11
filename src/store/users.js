@@ -106,6 +106,7 @@ export default {
 					'',
 					payload.id)
 
+
 				const user = await fb.database().ref('users').push(newUser);
 				const userKey = { ...newUser, key: user.key }
 				await fb.database().ref(`/users/${user.key}`).update(userKey)
