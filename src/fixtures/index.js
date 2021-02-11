@@ -1,4 +1,4 @@
-import { required, email, sameAs, between, maxLength, maxLength, decimal } from 'vuelidate/lib/validators';
+import { required, email, sameAs, maxLength, decimal, minLength } from 'vuelidate/lib/validators';
 
 export const registrationForm = [
 	{
@@ -41,37 +41,40 @@ export const registrationForm = [
 
 export const validationForm = {
 	registration: {
-			name: {
-				required
-			},
-			phone: {
-				required,
-				decimal,
-				minLength: 10,
-				maxLength: 10
-			},
-			email:{
-				required,
-				email
-			},
-			password: {
-				required,
-				between: between(6, 40)
-			},
-			confirmPassword: {
-				required,
-				sameAs: sameAs('password')
-			}
+		name: {
+			required
+		},
+		phone: {
+			required,
+			minLength: minLength(10),
+			maxLength: maxLength(10),
+			decimal
+
+		},
+		email:{
+			required,
+			email
+		},
+		password: {
+			required,
+			minLength: minLength(6),
+			maxLength: maxLength(40),
+		},
+		confirmPassword: {
+			required,
+			sameAs: sameAs('password')
+		}
 	},
 	login: {
-			email:{
-				required,
-				email
-			},
-			password: {
-				required,
-				between: between(6, 40)
-			},
+		email:{
+			required,
+			email
+		},
+		password: {
+			required,
+			maxLength: 40,
+			minLength: 6
+		},
 	}
 
 }
@@ -82,7 +85,11 @@ export const returnValidationForm = (type) =>{
 					required
 				},
 				phone: {
-					required
+					required,
+					minLength: minLength(10),
+					maxLength: maxLength(10),
+					decimal
+
 				},
 				email:{
 					required,
@@ -90,9 +97,8 @@ export const returnValidationForm = (type) =>{
 				},
 				password: {
 					required,
-					// between: between(6, 40)
-					maxLength: 40,
-					minLength: 6
+					minLength: minLength(6),
+					maxLength: maxLength(40),
 				},
 				confirmPassword: {
 					required,
@@ -108,7 +114,6 @@ export const returnValidationForm = (type) =>{
 					required,
 					maxLength: 40,
 					minLength: 6
-					// between: between(6, 40)
 				},
 			}
 

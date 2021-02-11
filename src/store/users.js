@@ -46,9 +46,7 @@ export default {
 			state.users = [ ...payload ]
 		},
 		updateUser (state, payload) {
-			console.log('jfjfdddd')
 			const newUsers = state.users.map(user => {
-				console.log('ghdgdg',payload, user)
 				if ( payload.id === user.id ) {
 					user = {...payload}
 				}
@@ -60,8 +58,8 @@ export default {
 		async registerUser({commit}, {email, password}) {
 			commit('clearError')
 			commit('setLoading', true)
-			const user = await fb.auth().createUserWithEmailAndPassword(email, password)
 			try {
+				const user = await fb.auth().createUserWithEmailAndPassword(email, password)
 				commit('setLoading', false)
 				commit('setUser', new User(user.uid))
 			}
@@ -75,14 +73,15 @@ export default {
 		async loginUser ({commit}, { email, password }) {
 			commit('clearError')
 			commit('setLoading', true)
-			const user = await fb.auth().signInWithEmailAndPassword(email, password)
 			try {
+				const user = await fb.auth().signInWithEmailAndPassword(email, password)
 				commit('setLoading', false)
 				commit('setUser', new User(user.uid))
 			}
 			catch (error) {
 				commit('setLoading', false)
 				commit('setError', error.message)
+				console.log('commit(\'setError\', error.message)')
 				throw error;
 			}
 		},
@@ -128,9 +127,7 @@ export default {
 				const image = payload
 				const imageExt = image.name. slice(image.name.lastIndexOf('.'))
 				const user = this.state.users.users.find(user => user.id === this.state.users.user.id )
-				console.log('this.state.users.', user)
 				const path = `${Date.now().toString()}.${user.id}${imageExt}`
-				console.log('path', path)
 				const storageRef = fb.storage().ref('users')
 				await storageRef.child(path).put(image)
 				const imageSrc = await storageRef.child(path).getDownloadURL()

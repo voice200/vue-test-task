@@ -12,16 +12,19 @@
                  v-model="formState[item.name]"
                  @blur="$v.formState[item.name].$touch()"
                  :placeholder="item.placeholder">
-
           <div class="invalid-feedback" v-if="!$v.formState[item.name].required">
             This field is required
           </div>
           <div class="invalid-feedback" v-if="!$v.formState[item.name].email && item.name === 'email'">
             This field should be an Email
           </div>
-          <div class="invalid-feedback" v-if="item.name === 'password' && !$v.formState[item.name].between">
-            Length of password should be between {{$v.formState[item.name].$params.between.min}}
-            and {{$v.formState[item.name].$params.between.max}},
+          <div class="invalid-feedback" v-if="item.name === 'password' && (!$v.formState[item.name].maxLength || !$v.formState[item.name].minLength)">
+            Length of phone should be between {{$v.formState[item.name].$params.minLength.min}}
+            and {{$v.formState[item.name].$params.maxLength.max}},
+            now Length is {{ formState[item.name].length }}
+          </div>
+          <div class="invalid-feedback" v-if="item.name === 'phone' && (!$v.formState[item.name].maxLength || !$v.formState[item.name].minLength)">
+            Length of password should be {{$v.formState[item.name].$params.maxLength.max}} decimal,
             now Length is {{ formState[item.name].length }}
           </div>
           <div class="invalid-feedback" v-if="!$v.formState[item.name].sameAs && item.name === 'confirmPassword'">
@@ -49,16 +52,16 @@
 </template>
 
 <script>
-import { returnValidationForm } from '@/fixtures'
+// import { returnValidationForm } from '@/fixtures'
 import {validationForm} from '@/fixtures'
 import fb from 'firebase/app'
 import "firebase/auth"
 import "firebase/firestore"
 import 'firebase/database'
 
-const state = {
-  validator: {}
-}
+// const state = {
+//   validator: validationForm.registration
+// }
 
 export default {
   props: ['dataForm', 'type'],
@@ -71,7 +74,6 @@ export default {
   },
   methods:{
     onSubmit () {
-      console.log('form', this.formState)
       if ( this.type === 'registration') {
         this.$store.dispatch('registerUser', this.formState)
             .then(()=>{
@@ -89,7 +91,9 @@ export default {
               const user = fb.auth().currentUser
               this.$router.push(`/myProfile/${user.uid}`)
             })
-            .catch(err => console.log(err))
+            .catch(err => {
+              console.log('loading', this.loading)
+              console.log(err)})
       }
 
     },
@@ -99,31 +103,21 @@ export default {
         data[key] = ''
       }
       this.formState = {...data}
-      console.log('reset', this.formState)
     },
   },
   computed: {
     loading () {
       return this.$store.getters.loading
-    },
-    getUserById () {
-        const id = this.id
-        return this.$store.getters.userById(id)
-    },
-    getUser () {
-      return this.getUser()
-    },
+    }
   },
   created() {
     const newData = this.dataForm.forEach(item =>{
       return { ...newData, [item.name]: '' };
     });
     this.formState = { ...this.formState, ...newData };
-    state.validator = returnValidationForm(this.type);
-
   },
   validations: {
-    formState: validationForm.registration
+    formState: {...validationForm.registration}
   }
 }
 </script>

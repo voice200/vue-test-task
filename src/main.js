@@ -31,9 +31,12 @@ new Vue({
     });
 
     firebase.auth().onAuthStateChanged(user => {
-      console.log('user11111', user)
       if (user) {
+        console.log('user',user)
         this.$store.dispatch('autoLogUser', user)
+      }
+      else {
+        console.log('no data')
       }
     });
 
